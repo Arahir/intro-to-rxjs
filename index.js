@@ -5,10 +5,6 @@ var responseStream = requestStream
     return Rx.Observable.fromPromise(jQuery.getJSON(requestUrl));
   });
 
-responseStream.subscribe(function(response) {
-  console.log(response);
-});
-
 var refreshButton = document.querySelector('.refresh');
 var refreshClickStream = Rx.Observable.fromEvent(refreshButton, 'click');
 

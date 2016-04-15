@@ -1,6 +1,10 @@
+//Selectors
 var refreshButton = document.querySelector('.refresh');
+var closeButton1 = document.querySelector('.close1')
 
+//Stream from click
 var refreshClickStream = Rx.Observable.fromEvent(refreshButton, 'click');
+var close1ClickStream = Rx.Observable.fromEvent(closeButton1, 'click');
 
 var requestStream = refreshClickStream
   .startWith('startup click')
@@ -14,11 +18,12 @@ var responseStream = requestStream
     return Rx.Observable.fromPromise(jQuery.getJSON(requestUrl));
   });
 
-var suggestion1Stream = responseStream
-  .map(function(listUsers) {
-    // get one random user from the list
-    return listUsers[Math.floor(Math.random()*listUsers.length)];
-  })
+var suggestion1Stream = close1ClickStream.startWith('startup click')
+  .combineLatest(responseStream,
+    function(click, listUsers) {
+      return listUsers[Math.floor(Math.random()*listUsers.length)];
+    }
+  )
   .merge(
     refreshClickStream.map(function(){ return null; })
   )
